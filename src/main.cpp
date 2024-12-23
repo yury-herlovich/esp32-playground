@@ -1,8 +1,6 @@
 #include <Arduino.h>
-#include <WiFiMulti.h>
+#include <WiFi.h>
 #include <secrets.h>
-
-WiFiMulti wifiMulti;
 
 void blink(int time);
 
@@ -13,19 +11,24 @@ void setup() {
   Serial.println("Hello from the setup");
 
   // connect to wifi
-  wifiMulti.addAP(WIFI_SSID, WIFI_PASS);
-
-  blink(250);
-
-  while (wifiMulti.run() != WL_CONNECTED) {
-    blink(250);
-  }
-
-  Serial.println("Connected to wifi");
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 }
 
+bool IsConnected = false;
+
 void loop() {
-  digitalWrite(LED_BUILTIN, WiFi.status() == WL_CONNECTED ? HIGH : LOW);
+  if (WiFi.status() == WL_CONNECTED && !IsConnected) {
+    Serial.println("Connected to the WiFi network");
+    digitalWrite(LED_BUILTIN, HIGH);
+    IsConnected = true;
+  }
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println(".");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    IsConnected = false;
+    delay(500);
+  }
 }
 
 void blink(int time) {
