@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include <secrets.h>
 #include <httpServer.h>
-
-void blink(int time);
+#include "blink.h"
+#include <SPIFFS.h>
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -12,6 +12,11 @@ void setup() {
   Serial.println("Hello from the setup");
 
   delay(2000);
+
+  if(!SPIFFS.begin(true)){
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
 
   // connect to wifi
   WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -25,7 +30,7 @@ void loop() {
       Serial.println("Connected to the WiFi network");
       Serial.println(WiFi.localIP());
 
-      digitalWrite(LED_BUILTIN, HIGH);
+      ledOn();
       IsConnected = true;
 
 
@@ -41,12 +46,4 @@ void loop() {
     IsConnected = false;
     delay(500);
   }
-}
-
-void blink(int time) {
-  digitalWrite(LED_BUILTIN,HIGH);
-  delay(time);
-
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(time);
 }

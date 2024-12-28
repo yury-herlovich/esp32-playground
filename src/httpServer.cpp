@@ -1,4 +1,6 @@
 #include <WiFi.h>
+#include <blink.h>
+#include "SPIFFS.h"
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -50,6 +52,16 @@ void listenConnections() {
             client.println("Connection: close");
             client.println();
 
+            if (header.indexOf("GET /blink") >= 0) {
+              Serial.println("Blink request");
+
+              for (int i = 0; i < 5; i++) {
+                blink(100);
+              }
+
+              ledOn();
+            }
+
             String response = displayWebPage();
             client.println(response);
 
@@ -74,9 +86,18 @@ void listenConnections() {
 }
 
 String displayWebPage() {
-  String webPage = "<!DOCTYPE html><html><head><title>ESP32 Web Server</title></head><body>";
-  webPage += "<h1>Hello from the ESP32 Web Server</h1>";
-  webPage += "</body></html>";
+  File file = SPIFFS.open("/page.html", "r");
+  String webPage = "";
+
+  if(!file){
+    Serial.println("Failed to open file for reading");
+  }
+
+  while(file.available()){
+    webPage += (char)file.read();
+  }
+
+  file.close();
 
   return webPage;
 }
