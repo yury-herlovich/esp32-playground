@@ -14,8 +14,11 @@ unsigned long previousTime = 0;
 // Variable to store the HTTP request
 String header;
 
+// web page content
+String webPageContent;
+
 // Function declaration
-String displayWebPage();
+String loadWebPage();
 
 void startHttpServer() {
   Serial.println("Starting HTTP server");
@@ -23,6 +26,9 @@ void startHttpServer() {
   server.begin();
 
   Serial.println("Client connected");
+
+  // load web page
+  webPageContent = loadWebPage();
 }
 
 void listenConnections() {
@@ -62,8 +68,7 @@ void listenConnections() {
               ledOn();
             }
 
-            String response = displayWebPage();
-            client.println(response);
+            client.println(webPageContent);
 
             break;
           } else {
@@ -85,7 +90,7 @@ void listenConnections() {
   }
 }
 
-String displayWebPage() {
+String loadWebPage() {
   File file = SPIFFS.open("/page.html", "r");
   String webPage = "";
 
