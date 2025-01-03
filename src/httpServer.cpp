@@ -19,6 +19,7 @@ String webPageContent;
 
 // Function declaration
 String loadWebPage();
+String processTemplate(String page, bool ledStatus);
 
 void startHttpServer() {
   Serial.println("Starting HTTP server");
@@ -61,14 +62,21 @@ void listenConnections() {
             if (header.indexOf("GET /blink") >= 0) {
               Serial.println("Blink request");
 
-              for (int i = 0; i < 5; i++) {
-                blink(100);
-              }
+              blink(100, 5);
+            }
 
+            if (header.indexOf("GET /on") >= 0) {
+              Serial.println("ON request");
               ledOn();
             }
 
-            client.println(webPageContent);
+            if (header.indexOf("GET /off") >= 0) {
+              Serial.println("OFF request");
+              ledOff();
+            }
+
+            String pageContent = processTemplate(webPageContent, ledStatus());
+            client.println(pageContent);
 
             break;
           } else {
@@ -105,4 +113,12 @@ String loadWebPage() {
   file.close();
 
   return webPage;
+}
+
+String processTemplate(String page, bool ledStatus) {
+  page.replace("{{LED_STATUS}}", ledStatus ? "ON" : "OFF");
+  page.replace("{{LED_STATUS_CLASS}}", ledStatus ? "on" : "off");
+  page.replace("{{LED_STATUS_NEXT}}", ledStatus ? "off" : "on");
+
+  return page;
 }

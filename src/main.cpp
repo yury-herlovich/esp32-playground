@@ -42,7 +42,7 @@ void loop() {
 
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println(".");
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    switchLed();
     IsConnected = false;
     delay(500);
   }
