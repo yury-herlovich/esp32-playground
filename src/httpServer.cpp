@@ -116,7 +116,7 @@ String loadWebPage() {
 }
 
 String processTemplate(String page, bool ledStatus) {
-  page.replace("{{LED_STATUS}}", ledStatus ? "ON" : "OFF");
+  page.replace("{{LED_STATUS}}", ledStatus ? "Turn OFF" : "Turn ON");
   page.replace("{{LED_STATUS_CLASS}}", ledStatus ? "on" : "off");
   page.replace("{{LED_STATUS_NEXT}}", ledStatus ? "off" : "on");
 
