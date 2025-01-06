@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include <blink.h>
 #include "SPIFFS.h"
+#include "pubsub.h"
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -68,11 +69,13 @@ void listenConnections() {
             if (header.indexOf("GET /on") >= 0) {
               Serial.println("ON request");
               ledOn();
+              publishMessage("LED ON");
             }
 
             if (header.indexOf("GET /off") >= 0) {
               Serial.println("OFF request");
               ledOff();
+              publishMessage("LED OFF");
             }
 
             String pageContent = processTemplate(webPageContent, ledStatus());

@@ -4,6 +4,7 @@
 #include <httpServer.h>
 #include "blink.h"
 #include <SPIFFS.h>
+#include "pubsub.h"
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -35,6 +36,7 @@ void loop() {
 
 
       startHttpServer();
+      connectToMqtt();
     }
 
     listenConnections();
