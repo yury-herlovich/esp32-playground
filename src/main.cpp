@@ -7,7 +7,7 @@
 #include "pubsub.h"
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  setupPin();
   Serial.begin(921600);
 
   Serial.println("Hello from the setup");
