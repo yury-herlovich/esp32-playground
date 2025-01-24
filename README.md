@@ -17,8 +17,9 @@ required to create a /src/secrets.h file containing
 ### TODO:
 - [x] [HTTP server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
 - [x] Mosquito queue client with sending led status to home assistant when led switched on/off (using HTTP server)
-- [ ] plug in external multi color LED
-- [ ] change colors
+- [x] plug in external multi color LED
+- [x] change colors
+- [ ] set colors with http
 - [ ] plug in external button and change colors using button
 - [ ] plug in humidity sensors
 - [ ] setup humidity + LED

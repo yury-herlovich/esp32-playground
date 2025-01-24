@@ -63,7 +63,7 @@ void listenConnections() {
             if (header.indexOf("GET /blink") >= 0) {
               Serial.println("Blink request");
 
-              blink(100, 5);
+              blink(100, 3);
             }
 
             if (header.indexOf("GET /on") >= 0) {
