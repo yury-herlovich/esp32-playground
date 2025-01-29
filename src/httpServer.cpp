@@ -21,6 +21,8 @@ String webPageContent;
 // Function declaration
 String loadWebPage();
 String processTemplate(String page, bool ledStatus);
+void blinkHandler(WiFiClient client);
+void switchHandler(WiFiClient client);
 
 void startHttpServer() {
   Serial.println("Starting HTTP server");
@@ -55,31 +57,19 @@ void listenConnections() {
         if (c == '\n') {
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0) {
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println("Connection: close");
-            client.println();
+            if (header.indexOf("POST /blink") >= 0) {
+              blinkHandler(client);
+            } else if (header.indexOf("POST /switch") >= 0) {
+              switchHandler(client);
+            } else {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println("Connection: close");
+              client.println();
 
-            if (header.indexOf("GET /blink") >= 0) {
-              Serial.println("Blink request");
-
-              blink(100, 3);
+              String pageContent = processTemplate(webPageContent, ledStatus());
+              client.println(pageContent);
             }
-
-            if (header.indexOf("GET /on") >= 0) {
-              Serial.println("ON request");
-              ledOn();
-              publishMessage("LED ON");
-            }
-
-            if (header.indexOf("GET /off") >= 0) {
-              Serial.println("OFF request");
-              ledOff();
-              publishMessage("LED OFF");
-            }
-
-            String pageContent = processTemplate(webPageContent, ledStatus());
-            client.println(pageContent);
 
             break;
           } else {
@@ -99,6 +89,37 @@ void listenConnections() {
     Serial.println("Client disconnected.");
     Serial.println("");
   }
+}
+
+void blinkHandler(WiFiClient client) {
+  Serial.println("Blink request");
+
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-type:application/json");
+  client.println("Connection: close");
+  client.println();
+
+  blink(100, 3);
+}
+
+void switchHandler(WiFiClient client) {
+  Serial.println("Switch led request");
+
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-type:application/json");
+  client.println("Connection: close");
+  client.println();
+
+  if (ledStatus()) {
+    ledOff();
+    publishMessage("LED OFF");
+  } else {
+    ledOn();
+    publishMessage("LED ON");
+  }
+
+  String response = "{\"ledStatus\": \"" + String(ledStatus() ? "ON" : "OFF") + "\"}";
+  client.println(response);
 }
 
 String loadWebPage() {

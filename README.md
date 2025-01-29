@@ -19,6 +19,7 @@ required to create a /src/secrets.h file containing
 - [x] Mosquito queue client with sending led status to home assistant when led switched on/off (using HTTP server)
 - [x] plug in external multi color LED
 - [x] change colors
+- [ ] post requests
 - [ ] set colors with http
 - [ ] plug in external button and change colors using button
 - [ ] plug in humidity sensors

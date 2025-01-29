@@ -26,20 +26,56 @@
     button.off {
       background-color: #888;
     }
-
   </style>
 </head>
 
 <body>
   <h1>Hello from the ESP32 Web Server</h1>
   <p>
-    <a href="/{{LED_STATUS_NEXT}}">
+    <a href="/{{LED_STATUS_NEXT}}" id="switch-led-link">
       <button class="button {{LED_STATUS_CLASS}}">{{LED_STATUS}}</button>
     </a>
 
-    <a href="/blink">
+    <a href="/blink" id="blink-led-link">
       <button class="button on">BLINK</button>
     </a>
   </p>
 </body>
+
+<script>
+  // blink request
+  document.getElementById('blink-led-link').onclick = async (event) => {
+    event.preventDefault();
+
+    await fetch('/blink', {
+      method: 'POST',
+    });
+  };
+
+  // switch request
+  const switchLedLink = document.getElementById('switch-led-link')
+  switchLedLink.onclick = async (event) => {
+    event.preventDefault();
+
+    const response = await fetch('/switch', {
+      method: 'POST',
+    });
+
+    try {
+      const { ledStatus } = JSON.parse(await response.text());
+
+      // update button class
+      const button = switchLedLink.querySelector('button');
+      button.classList.remove('on', 'off');
+      button.classList.add(ledStatus.toLowerCase());
+
+      // update button text
+      button.textContent = `Turn ${ledStatus === 'ON' ? 'OFF' : 'ON'}`;
+    } catch (error) {
+      console.error('failed to parse response', error);
+      return;
+    }
+  };
+</script>
+
 </html>
