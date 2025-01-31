@@ -3,8 +3,8 @@
 
 // array of pins {red, green, blue}
 int pins[3] = {D2, D3, D4};
-// default color white
-int colors[3] = {255, 255, 255};
+// default color red, green, blue
+int colors[3] = {255, 0, 0};
 bool isLedOn = false;
 
 // const int LED_PIN = LED_BUILTIN;
@@ -14,7 +14,9 @@ void setColor(int red, int green, int blue) {
   colors[1] = green;
   colors[2] = blue;
 
-  ledOn();
+  if (ledStatus()) {
+    ledOn();
+  }
 }
 
 void setupPin() {
@@ -27,52 +29,6 @@ void blink(int time, int times = 1) {
   bool currentLedStatus = ledStatus();
 
   for (int i = 0; i < times; i++) {
-    // change led colors
-    // Green
-    setColor(0, 256, 0);
-    delay(time);
-
-    // Blue
-    setColor(0, 0, 256);
-    delay(time);
-
-    // red
-    setColor(256, 0, 0);
-    delay(time);
-
-    // Yellow
-    setColor(256, 256, 0);
-    delay(time);
-
-    // Magenta
-    setColor(256, 0, 256);
-    delay(time);
-
-    // Pink
-    setColor(256, 192, 203);
-    delay(time);
-
-    // IndianRed
-    setColor(205, 92, 92);
-    delay(time);
-
-    // DeepPink
-    setColor(255, 20, 147);
-    delay(time);
-
-    // GreenYellow
-    setColor(173, 255, 47);
-    delay(time);
-
-    // SteelBlue
-    setColor(70, 130, 180);
-    delay(time);
-
-    // DarkSlateGray
-    setColor(47, 79, 79);
-    delay(time);
-
-    setColor(255, 255, 255);
     ledOn();
     delay(time);
 

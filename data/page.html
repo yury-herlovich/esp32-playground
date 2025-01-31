@@ -1,32 +1,6 @@
 <!DOCTYPE html><html><head>
   <title>ESP32 Web Server</title>
-  <style>
-    html {
-      font-family: Helvetica;
-      display: inline-block;
-      margin: 0px auto;
-      text-align: center;
-    }
-
-    button {
-      border: none;
-      border-radius: 7px;
-      color: white;
-      padding: 10px 40px;
-      text-decoration: none;
-      font-size: 20px;
-      margin: 2px;
-      cursor: pointer;
-    }
-
-    button.on {
-      background-color: #4CAF50;
-    }
-
-    button.off {
-      background-color: #888;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -40,42 +14,11 @@
       <button class="button on">BLINK</button>
     </a>
   </p>
+
+  <div id="picker"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+  <script  type="text/javascript" src="script.js"></script>
+
 </body>
-
-<script>
-  // blink request
-  document.getElementById('blink-led-link').onclick = async (event) => {
-    event.preventDefault();
-
-    await fetch('/blink', {
-      method: 'POST',
-    });
-  };
-
-  // switch request
-  const switchLedLink = document.getElementById('switch-led-link')
-  switchLedLink.onclick = async (event) => {
-    event.preventDefault();
-
-    const response = await fetch('/switch', {
-      method: 'POST',
-    });
-
-    try {
-      const { ledStatus } = JSON.parse(await response.text());
-
-      // update button class
-      const button = switchLedLink.querySelector('button');
-      button.classList.remove('on', 'off');
-      button.classList.add(ledStatus.toLowerCase());
-
-      // update button text
-      button.textContent = `Turn ${ledStatus === 'ON' ? 'OFF' : 'ON'}`;
-    } catch (error) {
-      console.error('failed to parse response', error);
-      return;
-    }
-  };
-</script>
-
 </html>
